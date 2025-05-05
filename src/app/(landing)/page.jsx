@@ -49,7 +49,12 @@ export default function Page() {
 
       // Otherwise fetch the data
       try {
-        const fetchedData = await getResumeGraphData();
+        const response = await fetch('/api/graph-data');
+        if (!response.ok) {
+          throw new Error(`HTTP error ${response.status}`);
+        }
+        const fetchedData = await response.json();
+
         // Store in our global cache
         cachedGraphData = fetchedData;
         setData(fetchedData);
@@ -87,7 +92,6 @@ export default function Page() {
 
   if (error) return <div>Error loading graph data. Please try again later.</div>;
 
-  // Pass the data to the client component
   return (
     <>
       {showTutorial && <WelcomeTutorial onComplete={handleTutorialComplete} />}
