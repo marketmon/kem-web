@@ -26,42 +26,12 @@ const ResultStage = ({
         };
 
         setupFinalAppearance(graph);
-        focusCameraOnNodes(graph);
 
         return () => {
             cleanup(graph);
         };
     }, [graphRef, filteredNodeIds, expandedNodeIds]);
 
-    const focusCameraOnNodes = (graph) => {
-        const importantNodeIds = new Set([...filteredNodeIds, ...expandedNodeIds]);
-        const nodes = graphData.nodes.filter(n => importantNodeIds.has(n.id));
-        if (!nodes.length) return;
-
-        const bounds = ['x', 'y', 'z'].reduce((acc, axis) => {
-            const values = nodes.map(n => n[axis] || 0);
-            acc.min[axis] = Math.min(...values);
-            acc.max[axis] = Math.max(...values);
-            return acc;
-        }, { min: {}, max: {} });
-
-        const center = {
-            x: (bounds.min.x + bounds.max.x) / 2,
-            y: (bounds.min.y + bounds.max.y) / 2,
-            z: (bounds.min.z + bounds.max.z) / 2
-        };
-
-        const extent = Math.max(
-            bounds.max.x - bounds.min.x,
-            bounds.max.y - bounds.min.y,
-            bounds.max.z - bounds.min.z
-        );
-
-        const dist = 3 * extent;
-        const camPos = { x: center.x, y: center.y, z: center.z + dist };
-
-        graph.cameraPosition(camPos, center, 2000);
-    };
 
     const setupFinalAppearance = (graph) => {
         const importantNodeIds = new Set([...filteredNodeIds, ...expandedNodeIds]);

@@ -88,7 +88,7 @@ const FilteringStage = ({
                 }
                 return node.val * nodeSize * 0.5;
             })
-            .linkWidth(1)
+            .linkWidth(0.5)
             .refresh();
     };
 
@@ -115,7 +115,7 @@ const FilteringStage = ({
                     }
                 }
 
-                return '#777777';
+                return '#555555';
             })
             .nodeVal(node => {
                 const baseSize = node.val * nodeSize;
@@ -193,7 +193,7 @@ const FilteringStage = ({
                     }
                 }
 
-                return '#777777';
+                return '#555555';
             })
             .nodeVal(node => {
                 const baseSize = node.val * nodeSize;

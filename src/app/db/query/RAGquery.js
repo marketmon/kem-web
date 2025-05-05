@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 
-
+/*
 export default async function queryRAG(query) {
     // Simulate API delay
     await new Promise(resolve => setTimeout(resolve, 1500));
@@ -66,10 +66,11 @@ export default async function queryRAG(query) {
         }
     };
 }
+    */
 
 
 
-/*
+
 export default async function queryRAG(query) {
 
     try {
@@ -90,7 +91,7 @@ export default async function queryRAG(query) {
     }
 
 }
-*/
+
 
 
 /*
