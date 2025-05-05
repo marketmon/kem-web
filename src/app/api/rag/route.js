@@ -5,7 +5,7 @@ export async function POST(request) {
         const body = await request.json();
 
         // Forward request to Python backend
-        const response = await fetch('https://web-production-c112.up.railway.app/api/rag/query', {
+        const response = await fetch('https://personal-website-backend-gfg7.onrender.com/api/rag/query', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
