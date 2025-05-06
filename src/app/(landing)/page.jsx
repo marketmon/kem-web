@@ -2,7 +2,6 @@
 "use client";
 
 import { useState, useEffect } from 'react';
-import { getResumeGraphData } from "../db/query/graphDataFetch";
 import ResumeGraphPage from "../components/graphPage";
 import WelcomeTutorial from "../components/tutorial/tutorialComponent"; // Import the tutorial component
 import Image from 'next/image';
@@ -14,7 +13,7 @@ let cachedGraphData = null;
 const FIRST_TIME_USER_KEY = 'hasVisitedResumeGraph';
 
 // SIMPLE TEST MODE VARIABLE - Set to true to test the tutorial
-const TEST_MODE = true; // Set to true when you want to test the tutorial
+const TEST_MODE = false; // Set to true when you want to test the tutorial
 
 export default function Page() {
   const [data, setData] = useState(null);

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import Typewriter from './typingEffect';
-import { Send, Sparkles, Loader2, X, RefreshCw, Plus, MessageCirclePlus } from 'lucide-react';
+import { Send, Sparkles, Loader2, X, MessageCirclePlus } from 'lucide-react';
 import queryRAG from '../../db/query/RAGquery';
 import RAGVisualization from './ragVisualization';
 import ThinkingAnimation from './ragAnimationStages/thinkingStage';
@@ -32,9 +32,8 @@ export default function AIChat({ setIsAIOn, graphRef, graphData, colorMap, isMob
             let responseContent = "I couldn't find specific information about that. Try asking about Ethan's experience, skills, or projects.";
 
             if (response) {
-                //responseContent = response.answer.results_collector.final_result.replies[0]._content[0].text;
-                //setRagResponse(response.answer.results_collector.final_result);
-                console.log(response)
+                responseContent = response.answer.results_collector.final_result.replies[0]._content[0].text;
+                setRagResponse(response.answer.results_collector.final_result);
                 // Transition from thinking to visualization
                 setShowThinking(false);
                 setShowVisualization(true);
