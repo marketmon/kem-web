@@ -34,6 +34,7 @@ export default function TimelineControls(props) {
     const [isCompact, setIsCompact] = useState(true);
     const [touchStartX, setTouchStartX] = useState(0);
     const [isTouchDragging, setIsTouchDragging] = useState(false);
+    const [selectedDate, setSelectedDate] = useState('');
 
 
 
@@ -86,6 +87,8 @@ export default function TimelineControls(props) {
             }
         }
     }, [timelineState.currentIndex]);
+
+    // Add these modifications to your TimelineControls component
 
     // Modified handlers for desktop
     const handleMouseDown = (e) => {
@@ -300,14 +303,7 @@ export default function TimelineControls(props) {
             className={`fixed bottom-2 left-1/2 transform -translate-x-1/2 bg-gradient-to-t from-black via-gray-900/95 to-gray-900/90 backdrop-blur-md border border-gray-700/50 rounded-2xl shadow-xl z-50 w-11/12 max-w-4xl transition-all duration-300 ${isCompact ? 'p-2 sm:p-3' : 'p-3 sm:p-5'
                 }`}
         >
-            {/* Resize button in top-right corner */}
-            <button
-                onClick={() => setIsCompact(!isCompact)}
-                className="absolute top-2 right-12 p-1.5 text-gray-400 hover:text-white hover:bg-gray-800/50 rounded-lg transition-all"
-                title={isCompact ? "Expand" : "Compact"}
-            >
-                {isCompact ? <Maximize2 size={16} /> : <Minimize2 size={16} />}
-            </button>
+
 
             {/* Top controls with mobile-optimized layout */}
             <div className={`flex justify-between items-center ${isCompact ? 'mb-2' : 'mb-4'}`}>
@@ -319,8 +315,16 @@ export default function TimelineControls(props) {
                     <X size={18} />
                 </button>
 
-                <div className={`flex flex-col items-center flex-grow mx-2 sm:mx-4 bg-gray-800/50 rounded-xl border border-gray-700/50 ${isCompact ? 'p-2' : 'p-3'
+                <div className={`relative flex flex-col items-center flex-grow mx-2 sm:mx-4 bg-gray-800/50 rounded-xl border border-gray-700/50 ${isCompact ? 'p-2' : 'p-3'
                     }`}>
+                    {/* Resize button in top-right corner */}
+                    <button
+                        onClick={() => setIsCompact(!isCompact)}
+                        className="absolute top-1 right-1 p-1.5 text-gray-400 hover:text-white hover:bg-gray-800/50 rounded-lg transition-all"
+                        title={isCompact ? "Expand" : "Compact"}
+                    >
+                        {isCompact ? <Maximize2 size={16} /> : <Minimize2 size={16} />}
+                    </button>
                     {!isCompact && (
                         <div className="text-gray-400 text-xs font-medium mb-1">
                             Timeline Position

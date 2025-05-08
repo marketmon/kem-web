@@ -16,7 +16,7 @@ const FilteringStage = ({
     const animationFrameRef = useRef(null);
 
     useEffect(() => {
-        if (!graphRef?.current || !filteredNodeIds?.length || !retrievedNodeIds?.length) return;
+        if (!graphRef?.current || !retrievedNodeIds?.length) return;
 
         const graph = graphRef.current;
 
@@ -27,7 +27,7 @@ const FilteringStage = ({
             linkWidth: graph.linkWidth()
         };
 
-        // Initial setup - all retrieved nodes start in neutral state
+        // Initial setup - highlight all retrieved nodes
         setupInitialState(graph);
 
         return () => {
@@ -39,7 +39,7 @@ const FilteringStage = ({
     }, [graphRef, retrievedNodeIds, filteredNodeIds]);
 
     useEffect(() => {
-        if (!graphRef?.current || !filteredNodeIds?.length || !retrievedNodeIds?.length) return;
+        if (!graphRef?.current || !retrievedNodeIds?.length) return;
 
         const graph = graphRef.current;
 
@@ -77,154 +77,186 @@ const FilteringStage = ({
     const setupInitialState = (graph) => {
         graph
             .nodeColor(node => {
+                // All retrieved nodes start highlighted
                 if (retrievedNodeIds.includes(node.id)) {
-                    return '#777777';
+                    return '#ffaa00'; // Highlight color for retrieved nodes
                 }
-                return '#555555';
+                return '#555555'; // Default color for other nodes
             })
             .nodeVal(node => {
                 if (retrievedNodeIds.includes(node.id)) {
-                    return node.val * nodeSize * 1.2;
+                    return node.val * nodeSize * 1.5; // Bigger size for retrieved nodes
                 }
-                return node.val * nodeSize * 0.5;
+                return node.val * nodeSize * 0.5; // Smaller size for other nodes
             })
-            .linkWidth(0.5)
+            .linkWidth(link => {
+                const sourceId = typeof link.source === 'object' ? link.source.id : link.source;
+                const targetId = typeof link.target === 'object' ? link.target.id : link.target;
+
+                const sourceRetrieved = retrievedNodeIds.includes(sourceId);
+                const targetRetrieved = retrievedNodeIds.includes(targetId);
+
+                if (sourceRetrieved && targetRetrieved) {
+                    return 1.5; // Highlight links between retrieved nodes
+                }
+                return 0.5; // Default link width
+            })
             .refresh();
     };
 
     // Simplified mobile version with fewer state changes
     const updateNodeAppearanceMobile = (graph, progress) => {
-        // Process fewer nodes at once on mobile
-        const nodesPerStep = Math.max(1, Math.floor(retrievedNodeIds.length / 10));
-        const nodesProcessed = Math.floor(progress * retrievedNodeIds.length);
+        // Calculate which node is currently being focused on
+        const nodeCount = retrievedNodeIds.length;
+        const focusIndex = Math.min(Math.floor(progress * (nodeCount + 1)), nodeCount - 1);
+        const isFinished = progress >= 1;
 
         graph
             .nodeColor(node => {
                 if (!retrievedNodeIds.includes(node.id)) {
-                    return '#555555';
+                    return '#555555'; // Default color for non-retrieved nodes
                 }
 
                 const nodeIndex = retrievedNodeIds.indexOf(node.id);
 
-                // Simplified evaluation state
-                if (nodeIndex < nodesProcessed) {
+                // Node currently being focused on
+                if (!isFinished && nodeIndex === focusIndex) {
+                    return '#ffff00'; // Focus color (yellow)
+                }
+
+                // Nodes that have been processed
+                if (nodeIndex < focusIndex || isFinished) {
                     if (filteredNodeIds.includes(node.id)) {
-                        return '#00ff00';
+                        return '#00ff00'; // Filtered node color (green)
                     } else {
-                        return '#555555';
+                        return '#777777'; // Processed but not filtered (gray)
                     }
                 }
 
-                return '#555555';
+                // Nodes not yet processed
+                return '#ffaa00'; // Highlighted but not processed (orange)
             })
             .nodeVal(node => {
                 const baseSize = node.val * nodeSize;
 
                 if (!retrievedNodeIds.includes(node.id)) {
-                    return baseSize * 0.5;
+                    return baseSize * 0.5; // Smaller size for non-retrieved nodes
                 }
 
                 const nodeIndex = retrievedNodeIds.indexOf(node.id);
 
-                if (nodeIndex < nodesProcessed) {
+                // Node currently being focused on
+                if (!isFinished && nodeIndex === focusIndex) {
+                    return baseSize * 2.2; // Largest size for focused node
+                }
+
+                // Nodes that have been processed
+                if (nodeIndex < focusIndex || isFinished) {
                     if (filteredNodeIds.includes(node.id)) {
-                        return baseSize * 1.8; // Less dramatic size change
+                        return baseSize * 1.8; // Larger size for filtered nodes
                     } else {
-                        return baseSize * 0.6;
+                        return baseSize * 0.7; // Smaller size for processed but not filtered
                     }
                 }
 
-                return baseSize * 1.2;
+                // Nodes not yet processed
+                return baseSize * 1.5; // Medium size for highlighted but not processed
             });
 
-        // Only refresh every few updates on mobile
-        if (nodesProcessed % nodesPerStep === 0 || progress === 1) {
+        // Only refresh every few updates on mobile for performance
+        if (Math.random() < 0.2 || isFinished) {
             graph.refresh();
         }
     };
 
     // Simplified mobile version with fewer link updates
     const updateLinkAppearanceMobile = (graph, progress) => {
-        if (progress < 0.5 || progress === 1) { // Only update links at key points
+        // Update links less frequently on mobile
+        if (progress < 0.3 || progress > 0.7 || progress === 1) {
             graph
                 .linkWidth(link => {
                     const sourceId = typeof link.source === 'object' ? link.source.id : link.source;
                     const targetId = typeof link.target === 'object' ? link.target.id : link.target;
 
-                    if (progress === 1) {
-                        const sourceFiltered = filteredNodeIds.includes(sourceId);
-                        const targetFiltered = filteredNodeIds.includes(targetId);
+                    const sourceFiltered = filteredNodeIds.includes(sourceId);
+                    const targetFiltered = filteredNodeIds.includes(targetId);
 
-                        if (sourceFiltered && targetFiltered) {
-                            return 2.5;
-                        } else if (sourceFiltered || targetFiltered) {
-                            return 1;
-                        }
+                    if (sourceFiltered && targetFiltered) {
+                        return 2; // Thicker links between filtered nodes
+                    } else if (sourceFiltered || targetFiltered) {
+                        return 1; // Medium links connected to filtered nodes
                     }
 
-                    return 0.5;
+                    return 0.5; // Default link width
                 });
         }
     };
 
     const updateNodeAppearance = (graph, progress) => {
-        // Original desktop version - unchanged
-        const nodesProcessed = Math.floor(progress * retrievedNodeIds.length);
-        const currentProcessingIndex = Math.min(nodesProcessed, retrievedNodeIds.length - 1);
-        const isProcessing = progress < 1;
+        // Calculate which node is currently being focused on
+        const nodeCount = retrievedNodeIds.length;
+        const focusIndex = Math.min(Math.floor(progress * (nodeCount + 1)), nodeCount - 1);
+        const isFinished = progress >= 1;
 
         graph
             .nodeColor(node => {
                 if (!retrievedNodeIds.includes(node.id)) {
-                    return '#555555';
+                    return '#555555'; // Default color for non-retrieved nodes
                 }
 
                 const nodeIndex = retrievedNodeIds.indexOf(node.id);
 
-                if (isProcessing && nodeIndex === currentProcessingIndex) {
-                    return '#ffff00';
+                // Node currently being focused on
+                if (!isFinished && nodeIndex === focusIndex) {
+                    return '#ffff00'; // Focus color (yellow)
                 }
 
-                if (nodeIndex < nodesProcessed) {
+                // Nodes that have been processed
+                if (nodeIndex < focusIndex || isFinished) {
                     if (filteredNodeIds.includes(node.id)) {
-                        return '#00ff00';
+                        return '#00ff00'; // Filtered node color (green)
                     } else {
-                        return '#555555';
+                        return '#777777'; // Processed but not filtered (gray)
                     }
                 }
 
-                return '#555555';
+                // Nodes not yet processed
+                return '#ffaa00'; // Highlighted but not processed (orange)
             })
             .nodeVal(node => {
                 const baseSize = node.val * nodeSize;
 
                 if (!retrievedNodeIds.includes(node.id)) {
-                    return baseSize * 0.5;
+                    return baseSize * 0.5; // Smaller size for non-retrieved nodes
                 }
 
                 const nodeIndex = retrievedNodeIds.indexOf(node.id);
 
-                if (isProcessing && nodeIndex === currentProcessingIndex) {
-                    return baseSize * 2.5;
+                // Node currently being focused on
+                if (!isFinished && nodeIndex === focusIndex) {
+                    return baseSize * 2.5; // Largest size for focused node
                 }
 
-                if (nodeIndex < nodesProcessed) {
+                // Nodes that have been processed
+                if (nodeIndex < focusIndex || isFinished) {
                     if (filteredNodeIds.includes(node.id)) {
-                        return baseSize * 2;
+                        return baseSize * 2; // Larger size for filtered nodes
                     } else {
-                        return baseSize * 0.5;
+                        return baseSize * 0.7; // Smaller size for processed but not filtered
                     }
                 }
 
-                return baseSize * 1.2;
+                // Nodes not yet processed
+                return baseSize * 1.5; // Medium size for highlighted but not processed
             });
 
         graph.refresh();
     };
 
     const updateLinkAppearance = (graph, progress) => {
-        // Original desktop version - unchanged
-        const nodesProcessed = Math.floor(progress * retrievedNodeIds.length);
+        const nodeCount = retrievedNodeIds.length;
+        const focusIndex = Math.min(Math.floor(progress * (nodeCount + 1)), nodeCount - 1);
+        const isFinished = progress >= 1;
 
         graph
             .linkWidth(link => {
@@ -235,26 +267,33 @@ const FilteringStage = ({
                 const targetRetrieved = retrievedNodeIds.includes(targetId);
 
                 if (!sourceRetrieved || !targetRetrieved) {
-                    return 0.5;
+                    return 0.5; // Default width for links not connecting retrieved nodes
                 }
 
                 const sourceIndex = retrievedNodeIds.indexOf(sourceId);
                 const targetIndex = retrievedNodeIds.indexOf(targetId);
 
-                if (sourceIndex < nodesProcessed && targetIndex < nodesProcessed) {
+                // Focus on links connected to the currently focused node
+                if (!isFinished && (sourceIndex === focusIndex || targetIndex === focusIndex)) {
+                    return 2.5; // Highlight links connected to focused node
+                }
+
+                // Links between processed nodes
+                if ((sourceIndex < focusIndex && targetIndex < focusIndex) || isFinished) {
                     const sourceFiltered = filteredNodeIds.includes(sourceId);
                     const targetFiltered = filteredNodeIds.includes(targetId);
 
                     if (sourceFiltered && targetFiltered) {
-                        return 3;
+                        return 3; // Thicker links between filtered nodes
                     } else if (sourceFiltered || targetFiltered) {
-                        return 1;
+                        return 1.5; // Medium links connected to filtered nodes
                     } else {
-                        return 0.3;
+                        return 0.3; // Thin links between non-filtered nodes
                     }
                 }
 
-                return 1.5;
+                // Links connected to nodes not yet processed
+                return 1; // Default width for retrieved but not processed
             });
 
         graph.refresh();

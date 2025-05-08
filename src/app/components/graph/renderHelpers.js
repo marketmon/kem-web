@@ -52,7 +52,7 @@ export const renderMobileControls = ({
                         className={`transition-transform duration-300 ${showControls ? 'rotate-180' : ''}`}
                     />
                     <span className="text-sm text-gray-300">
-                        {showControls ? 'Hide Controls' : 'Show Controls'}
+                        {showControls ? 'Hide Menu' : 'Show Menu'}
                     </span>
                 </div>
             </div>
@@ -226,39 +226,38 @@ export const renderDesktopControls = ({
     if (isMobile || isMenuOpen) return null;
 
     return (
-        <div className="absolute top-5 right-5 p-2 bg-black/40 border border-white rounded-lg flex flex-col justify-center gap-2">
-            {!timelineActive && <button
-                className="p-2 flex justify-center bg-black/60 rounded hover:bg-black/90 transition-colors"
-                onClick={() => { setIsMenuOpen(true) }}
-                title="Open Explorer Menu"
-            >
-                <div className="">
-                    <Menu className="hover:scale-105 hover:cursor-pointer mx-auto" size={26} />
-                    <p className="text-xs text-center">Menu</p>
-                </div>
-            </button>}
+        <div className="absolute top-5 right-5 p-3 bg-black/50 backdrop-blur-sm border border-white/20 rounded-lg flex flex-col gap-3 shadow-lg">
+            {!timelineActive && (
+                <button
+                    className="group flex flex-col items-center justify-center p-2 bg-black/40 rounded-md hover:bg-black/80 transition-all duration-200 transform hover:scale-105"
+                    onClick={() => { setIsMenuOpen(true) }}
+                    title="Open Explorer Menu"
+                >
+                    <Menu className="text-white/90 group-hover:text-white" size={24} />
+                    <span className="text-xs mt-1 text-white/80 group-hover:text-white font-medium">Menu</span>
+                </button>
+            )}
+
             <button
-                className="p-2 flex justify-center bg-black/60 rounded hover:bg-black/90 transition-colors"
+                className="group flex flex-col items-center justify-center p-2 bg-black/40 rounded-md hover:bg-black/80 transition-all duration-200 transform hover:scale-105"
                 onClick={handleZoomToFit}
                 title="Zoom to Fit"
             >
-                <div className="">
-                    <Expand className="hover:scale-105 hover:cursor-pointer mx-auto" size={26} />
-                    <p className="text-xs text-center">Zoom Fit</p>
-                </div>
+                <Expand className="text-white/90 group-hover:text-white" size={24} />
+                <span className="text-xs mt-1 text-white/80 group-hover:text-white font-medium">Zoom Fit</span>
             </button>
-            {!timelineActive && <button
-                className="p-2 flex justify-center bg-black/60 rounded hover:bg-black/90 transition-colors"
-                onClick={resetGraph}
-                title="Reset Graph"
-            >
-                <div className="">
 
-                    <RefreshCw className="hover:scale-105 hover:cursor-pointer mx-auto" size={26} />
-                    <p className="text-xs text-center">Restart</p>
-                </div>
+            {!timelineActive && (
+                <button
+                    className="group flex flex-col items-center justify-center p-2 bg-black/40 rounded-md hover:bg-black/80 transition-all duration-200 transform hover:scale-105"
+                    onClick={resetGraph}
+                    title="Reset Graph"
+                >
+                    <RefreshCw className="text-white/90 group-hover:text-white" size={24} />
+                    <span className="text-xs mt-1 text-white/80 group-hover:text-white font-medium">Restart</span>
+                </button>
+            )}
 
-            </button>}
             {!timelineActive && (
                 <button
                     onClick={() => {
@@ -272,21 +271,19 @@ export const renderDesktopControls = ({
                             nodeDates
                         )
                     }}
-                    className="p-2 flex justify-center bg-black/60 rounded hover:bg-black/90 transition-colors"
+                    className="group flex flex-col items-center justify-center p-2 bg-black/40 rounded-md hover:bg-black/80 transition-all duration-200 transform hover:scale-105"
+                    title="Timeline View"
                 >
-                    <div>
-                        <Clock
-                            title="Timeline View"
-                            className="hover:scale-105 hover:cursor-pointer mx-auto" size={26}
-                        />
-                        <p className="text-xs text-center">Timeline</p>
-                    </div>
+                    <Clock className="text-white/90 group-hover:text-white" size={24} />
+                    <span className="text-xs mt-1 text-white/80 group-hover:text-white font-medium">Timeline</span>
                 </button>
             )}
 
-            {!timelineActive && <div>
-                <AIButton isAIOn={isAIOn} setIsAIOn={setIsAIOn} />
-            </div>}
+            {!timelineActive && (
+                <div className="mt-1">
+                    <AIButton isAIOn={isAIOn} setIsAIOn={setIsAIOn} />
+                </div>
+            )}
         </div>
     );
 };

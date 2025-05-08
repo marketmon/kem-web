@@ -20,13 +20,6 @@ export const resetNodeHighlighting = (graphRef, setSelectedNode, setSelectedMenu
         return link.value ? Math.sqrt(link.value) * 0.5 : baseWidth;
     });
 
-    // Reset particles to default - but only if not on mobile
-    if (!isMobile) {
-        graphRef.current.linkDirectionalParticles((link) =>
-            link.value && link.value > 5 ? 4 : link.value && link.value > 3 ? 2 : 1
-        );
-    }
-
     // Reset node colors to original
     graphRef.current.nodeColor((node) => colorMap[node.group] || '#cccccc');
 
@@ -71,17 +64,6 @@ export const highlightNode = (node, graphRef, graphState, isMobile, nodeSize) =>
             ? (link.value ? Math.sqrt(link.value) * 1.5 : 3 * baseWidth)
             : (link.value ? Math.sqrt(link.value) * 0.5 : baseWidth);
     });
-
-    // Update particle effects - but only if not on mobile
-    if (!isMobile) {
-        graphRef.current.linkDirectionalParticles((link) => {
-            const sourceId = typeof link.source === 'object' ? link.source.id : link.source;
-            const targetId = typeof link.target === 'object' ? link.target.id : link.target;
-            const isConnected = sourceId === node.id || targetId === node.id;
-
-            return isConnected ? 6 : 0;
-        });
-    }
 
     // Update node styling
     graphRef.current.nodeColor((n) => {
@@ -143,30 +125,19 @@ export const highlightCategoryNode = (node, graphRef, graphState, isMobile, node
 
         const baseWidth = isMobile ? 2 : 1; // Thicker links on mobile
         return isConnected
-            ? (link.value ? Math.sqrt(link.value) * 1.5 : 3 * baseWidth)
-            : (link.value ? Math.sqrt(link.value) * 0.5 : baseWidth);
+            ? (link.value ? Math.sqrt(link.value) * 1 : 2 * baseWidth)
+            : (link.value ? Math.sqrt(link.value) * 0.2 : baseWidth);
     });
-
-    // Update particle effects - but only if not on mobile
-    if (!isMobile) {
-        graphRef.current.linkDirectionalParticles((link) => {
-            const sourceId = typeof link.source === 'object' ? link.source.id : link.source;
-            const targetId = typeof link.target === 'object' ? link.target.id : link.target;
-            const isConnected = sourceId === node.id || targetId === node.id;
-
-            return isConnected ? 6 : 0;
-        });
-    }
 
     // Update node styling
     graphRef.current.nodeColor((n) => {
         // If it's a node of the selected category or connected to one, keep its original group color
-        if (n.group === node.group || connectedNodes.has(n.id)) {
+        if (n.group === node.group) {
             return colorMap[n.group] || '#cccccc';
         }
 
         // Otherwise make it gray
-        return '#aaaaaa';
+        return '#555555';
     });
 
     // Update node size

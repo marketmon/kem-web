@@ -3,8 +3,8 @@
 
 import { useState, useEffect } from 'react';
 import ResumeGraphPage from "../components/graphPage";
-import WelcomeTutorial from "../components/tutorial/tutorialComponent"; // Import the tutorial component
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 
 // Global variable to cache the data
 let cachedGraphData = null;
@@ -19,7 +19,8 @@ export default function Page() {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [showTutorial, setShowTutorial] = useState(false);
+
+  const router = useRouter()
 
   // Effect to check if user is first time visitor
   useEffect(() => {
@@ -28,7 +29,7 @@ export default function Page() {
 
     // Show tutorial if it's test mode OR if user hasn't visited before
     if (TEST_MODE || !hasVisited) {
-      setShowTutorial(true);
+      router.push('./welcome')
     }
 
     // Mark user as having visited (unless in test mode)
@@ -70,11 +71,6 @@ export default function Page() {
     loadData();
   }, []);
 
-  // Handle tutorial completion
-  const handleTutorialComplete = () => {
-    setShowTutorial(false);
-  };
-
   if (loading) return (
     <div style={{
       height: '100vh',
@@ -83,9 +79,12 @@ export default function Page() {
       alignItems: 'center',
       justifyContent: 'center',
       background: '#000',
-      color: 'white'
+      color: 'white',
+      position: 'relative'
     }}>
-      <Image src="/signature_animation.gif" width={100} height={100} alt="signature logo animation" />
+      <FuturisticLoader>
+        <Image src="/signature_animation.gif" width={100} height={100} alt="signature logo animation" />
+      </FuturisticLoader>
     </div>
   );
 
@@ -93,8 +92,102 @@ export default function Page() {
 
   return (
     <>
-      {showTutorial && <WelcomeTutorial onComplete={handleTutorialComplete} />}
-      {!showTutorial && <ResumeGraphPage initialData={data} />}
+      <ResumeGraphPage initialData={data} />
     </>
+  );
+}
+
+// Futuristic animated loader component
+function FuturisticLoader({ children }) {
+  return (
+    <div className="futuristic-loader">
+      <div className="border-ring ring-1"></div>
+      <div className="border-ring ring-2"></div>
+      <div className="border-ring ring-3"></div>
+      <div className="content">
+        {children}
+      </div>
+
+      <style jsx>{`
+        .futuristic-loader {
+          position: relative;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          width: 180px;
+          height: 180px;
+        }
+        
+        .content {
+          position: relative;
+          z-index: 10;
+          padding: 10px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+        
+        .border-ring {
+          position: absolute;
+          border-radius: 50%;
+          border: 2px solid rgba(255, 255, 255, 0.7);
+          width: 100%;
+          height: 100%;
+          top: 0;
+          left: 0;
+          box-sizing: border-box;
+        }
+        
+        .ring-1 {
+          animation: rotate 4s linear infinite;
+          border-top-color: #4fc3f7;
+          border-left-color: transparent;
+          border-right-color: transparent;
+        }
+        
+        .ring-2 {
+          animation: rotate 3s linear infinite reverse;
+          width: 120%;
+          height: 120%;
+          top: -10%;
+          left: -10%;
+          border-bottom-color: #f06292;
+          border-right-color: #f06292;
+          border-top-color: transparent;
+          border-left-color: transparent;
+        }
+        
+        .ring-3 {
+          animation: pulsate 2s ease-in-out infinite;
+          width: 110%;
+          height: 110%;
+          top: -5%;
+          left: -5%;
+          border-color: rgba(255, 255, 255, 0.3);
+          border-width: 1px;
+          box-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+        }
+        
+        @keyframes rotate {
+          0% {
+            transform: rotate(0deg);
+          }
+          100% {
+            transform: rotate(360deg);
+          }
+        }
+        
+        @keyframes pulsate {
+          0%, 100% {
+            opacity: 0.3;
+            transform: scale(1);
+          }
+          50% {
+            opacity: 0.8;
+            transform: scale(1.03);
+          }
+        }
+      `}</style>
+    </div>
   );
 }

@@ -144,7 +144,8 @@ export const handleNodeClick = (
     isMenuOpen,
     activeCategory,
     setActiveCategory,
-    highlightNodeFn
+    highlightNodeFn,
+    isAIOn,
 ) => {
     // Check if the node is already selected
     const isAlreadySelected = selectedNode && selectedNode.id === node.id;
@@ -163,11 +164,9 @@ export const handleNodeClick = (
     // Highlight the node and connections
     highlightNodeFn(node);
 
-    // Focus camera on the node with appropriate animation
-    focusOnNode(node, graph, isMobile, isAlreadySelected);
-
     // On mobile, always show controls when selecting a node
     if (isMobile) {
         setShowControls(true);
     }
 };
+

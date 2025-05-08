@@ -9,8 +9,8 @@ const manrope = Manrope({
 
 // Define metadata using the Metadata API
 export const metadata = {
-  title: 'Interactive Resume | 3D Skills Graph',
-  description: 'Explore my skills, experience, and education in an interactive 3D graph',
+  title: 'The Future Resume | 3D Knowledge Graph',
+  description: "Hi I'm Ethan and this is a 3d representation of everything I've ever done. Enjoy.",
 };
 
 export default function RootLayout({ children }) {

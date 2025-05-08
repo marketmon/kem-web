@@ -89,7 +89,6 @@ const NewGraph = ({ graphData: initialGraphData }) => {
             handleNodeClick: (node, graph) => {
                 handleNodeClickWrapper(node, graph);
             },
-            handleBackgroundClick: handleBackgroundClick
         });
 
         // Save reference to graph
@@ -145,6 +144,7 @@ const NewGraph = ({ graphData: initialGraphData }) => {
         }
     }, [graphState.nodes]);
 
+
     // Wrapper function to handle node click from graph
     const handleNodeClickWrapper = (node, graph) => {
         handleNodeClick(
@@ -158,18 +158,9 @@ const NewGraph = ({ graphData: initialGraphData }) => {
             isMenuOpen,
             activeCategory,
             setActiveCategory,
-            (node) => highlightNode(node, graphRef, graphState, isMobile, graphSettings.nodeSize)
+            (node) => highlightNode(node, graphRef, graphState, isMobile, graphSettings.nodeSize),
+            isAIOn,
         );
-    };
-
-    // Handle background click
-    const handleBackgroundClick = () => {
-        resetNodeHighlighting(graphRef, setSelectedNode, setSelectedMenuNodeId, isMobile, graphSettings.nodeSize);
-
-        // On mobile, hide the floating controls when clicking elsewhere (toggle behavior)
-        if (isMobile) {
-            setShowControls(!showControls);
-        }
     };
 
     // Function to update the graph data - wrapper around imported function
@@ -211,8 +202,7 @@ const NewGraph = ({ graphData: initialGraphData }) => {
         setSelectedNode(null);
         setSelectedMenuNodeId(null);
 
-        // Restore full graph data
-        updateGraphDataWrapper(initialGraphData.nodes, initialGraphData.links);
+
 
         // Reset node highlighting
         resetNodeHighlighting(graphRef, setSelectedNode, setSelectedMenuNodeId, isMobile, graphSettings.nodeSize);

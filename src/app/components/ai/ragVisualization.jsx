@@ -201,17 +201,6 @@ const RAGVisualization = ({
                         {getStageDescription()}
                     </div>
 
-                    {/* Progress bar */}
-                    <div className={`w-full bg-white/10 ${isMobile ? 'h-1' : 'h-1.5'} rounded-full overflow-hidden mb-2`}>
-                        <div
-                            className="h-full bg-gradient-to-r from-blue-400 to-purple-400"
-                            style={{
-                                width: `${animationProgress * 100}%`,
-                                transition: 'width 0.1s linear'
-                            }}
-                        />
-                    </div>
-
                     {/* Compact stats */}
                     <div className="grid grid-cols-3 gap-1">
                         <div className={`bg-white/5 rounded ${isMobile ? 'p-1' : 'p-1.5'} text-center`}>

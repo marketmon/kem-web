@@ -4,6 +4,7 @@ import { X, ChevronRight, ChevronDown, RefreshCw } from "lucide-react";
 import { useEffect, useState } from "react";
 import RenderFocusedNodeView from './fullFocusedNodeView'
 import { getCategoryLabel, getNodeTitle } from "../infoStyle";
+import { useRouter } from "next/navigation";
 
 export default function NavigationMenu({
     setIsMenuOpen,
@@ -23,6 +24,9 @@ export default function NavigationMenu({
     const [recentlyViewed, setRecentlyViewed] = useState([]);
     const [pinnedNodes, setPinnedNodes] = useState(new Set());
     const [nodesInCategory, setNodesInCategory] = useState([]);
+    const [isContactOpen, setIsContactOpen] = useState(false);
+
+    const router = useRouter()
 
 
     // Calculate category statistics
@@ -284,6 +288,25 @@ export default function NavigationMenu({
     return (
         <div className="absolute top-0 right-0 h-[100vh] bg-black/80 w-[100vw] sm:w-[30vw] p-4 text-white overflow-y-scroll z-50">
             {/* Header */}
+            <div className="mb-4 border-b border-gray-800 flex justify-center gap-6 text-sm">
+                <button
+                    className="hover:cursor-pointer hover:scale-105 hover:text-text-gray-400 hover:underline rounded p-1"
+                    onClick={() => { router.push('/welcome') }}
+                >Tutorial</button>
+                <button
+                    className="hover:cursor-pointer hover:scale-105 hover:text-text-gray-400 hover:underline px-1 py-0.5"
+                    onClick={() => { setIsContactOpen(prevValue => !prevValue) }}
+                >
+                    Contact Me
+                </button>
+            </div>
+            {isContactOpen && <div className="text-sm text-center">
+                etmarkwalter[at]gmail[dot]com
+                <br></br>
+                <a
+                    className="hover:cursor-pointer underline itlaic"
+                    target="_blank" href="https://www.linkedin.com/in/ethan-markwalter/">Linkedin</a>
+            </div>}
             <div className="flex justify-between items-center mb-4">
                 <h2 className="text-lg font-bold">
                     {selectedNode ? 'Node Explorer' : 'Network Explorer'}

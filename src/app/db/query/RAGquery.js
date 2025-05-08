@@ -54,7 +54,7 @@ export default async function queryRAG(query) {
                         {
                             _content: [
                                 {
-                                    text: "Ethan has strong experience in software engineering with a focus on JavaScript and React. He's created several notable projects including a portfolio website and an API project. His colleagues recognize him as an effective problem solver, and he's collaborated with senior developers to improve his skills."
+                                    text: "Ethan has strong experience in software engineering with a focus on JavaScript and React. He's created several notable projects including a portfolio website and an API project. His colleagues recognize him as an effective problem solver, and he's collaborated with senior developers to improve his skills. REALLY REALLY REALLY LONG message so that I can see how the page reacts to long series of text. The apple cannon is not good if you forget the apples. The book is not good if you forget the pages. So here's the deal, don't forget the apples, don't forget the pages. If you do you will be sorely disappointed.... well unless you just want a cannon and you just want a cover."
                                 }
                             ],
                             _meta: {}
@@ -65,7 +65,8 @@ export default async function queryRAG(query) {
         }
     };
 }
-*/
+    */
+
 
 
 
