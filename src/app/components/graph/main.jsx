@@ -35,7 +35,7 @@ const NewGraph = ({ graphData: initialGraphData }) => {
     const [isMobile, setIsMobile] = useState(false);
     const [showControls, setShowControls] = useState(true);
     const [isMobileAdditionalDetailsOn, setIsMobileAdditionalDetailsOn] = useState(false);
-    const [isAIOn, setIsAIOn] = useState(false)
+    const [isAIOn, setIsAIOn] = useState(true)
 
     // Add state for nodes and links
     const [graphState, setGraphState] = useState({

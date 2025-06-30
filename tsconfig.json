@@ -28,7 +28,8 @@
     ".next/types/**/*.ts",
     "**/*.ts",
     "**/*.tsx",
-    "src/app/rag/page.jsx"
+    "src/app/rag/page.jsx",
+    "src/app/(landing)/chatfocused/page.jsx"
   ],
   "exclude": [
     "node_modules"
