@@ -2,6 +2,8 @@
 
 A comprehensive 3D graph visualization of professional profile data with intelligent RAG (Retrieval-Augmented Generation) pipeline for interactive resume analysis. This system represents Ethan Markwalter's professional journey as an interactive knowledge graph with AI-powered querying capabilities.
 
+![Project Overview Image: "I Cloned by Brain with AI](thumbnail.gif)
+
 ## 🌟 Features
 
 - **3D Force-Directed Graph**: Interactive visualization of resume entities and relationships
