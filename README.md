@@ -16,7 +16,7 @@ A comprehensive 3D graph visualization of professional profile data with intelli
 
 ## 🚀 Live Demo
 
-[View Live Demo](https://kemistry-snowy.vercel.app/) | [Video Overview](https://www.linkedin.com/posts/ethan-markwalter_explainableai-ai-deeplearning-activity-7328473691221106688-Wdsc?utm_source=share&utm_medium=member_desktop&rcm=ACoAACmnwVYBAMW9NIHSbSRPXDYDeM9ZyUUAp9Y)
+ [Video Overview](https://www.linkedin.com/posts/ethan-markwalter_explainableai-ai-deeplearning-activity-7328473691221106688-Wdsc?utm_source=share&utm_medium=member_desktop&rcm=ACoAACmnwVYBAMW9NIHSbSRPXDYDeM9ZyUUAp9Y)
 
 ## 📊 Architecture Overview
 
